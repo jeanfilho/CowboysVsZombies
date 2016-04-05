@@ -24,7 +24,7 @@ public class Player : MonoBehaviour {
 	{
 		weaponSelected="Shotgun";
 		actualWeapon= (GameObject)Instantiate(getactualWeapon(), WeaponSpawn.transform.position, Quaternion.identity);
-		actualWeapon.transform.parent = transform;
+		actualWeapon.transform.parent = WeaponSpawn.transform;
 	}
 	
 	// Update is called once per frame

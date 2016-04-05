@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 /*
  * This class holds player related variables and actions:
@@ -19,12 +20,18 @@ public class Player : MonoBehaviour {
 	public GameObject actualWeapon;
 
 
+    // UI:
+    public Text healthText;
+
 	// Use this for initialization
 	void Start () 
 	{
 		weaponSelected="Shotgun";
 		actualWeapon= (GameObject)Instantiate(getactualWeapon(), WeaponSpawn.transform.position, Quaternion.identity);
 		actualWeapon.transform.parent = WeaponSpawn.transform;
+
+        // UI:
+        healthText.text = "Health: " + GameData.Instance.getPlayerHealth();
 	}
 	
 	// Update is called once per frame
@@ -75,4 +82,11 @@ public class Player : MonoBehaviour {
 			return Revolver;
 		}
 	}
+
+    // #################### UI ####################
+    public void changePlayerHealth(int value)
+    {
+        GameData.Instance.changePlayerHealth(value);
+        healthText.text = "Health: " + GameData.Instance.getPlayerHealth();
+    }
 }

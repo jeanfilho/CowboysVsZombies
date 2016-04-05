@@ -27,7 +27,7 @@ public class Player : MonoBehaviour {
 	void Start () 
 	{
 		weaponSelected="Shotgun";
-		actualWeapon= (GameObject)Instantiate(getactualWeapon(), WeaponSpawn.transform.position, Quaternion.identity);
+		actualWeapon= (GameObject)Instantiate(getactualWeapon(), WeaponSpawn.transform.position, WeaponSpawn.transform.rotation);
 		actualWeapon.transform.parent = WeaponSpawn.transform;
 
         // UI:
@@ -62,8 +62,8 @@ public class Player : MonoBehaviour {
 		} 
 		else {
 			weaponSelected = newWeapon;
-			actualWeapon= (GameObject)Instantiate(getactualWeapon(), WeaponSpawn.transform.position, Quaternion.identity);
-			actualWeapon.transform.parent = transform;
+			actualWeapon= (GameObject)Instantiate(getactualWeapon(), WeaponSpawn.transform.position, WeaponSpawn.transform.rotation);
+			actualWeapon.transform.parent = WeaponSpawn.transform;
 		}
 	}
 

@@ -70,7 +70,6 @@ public class DataCollector : MonoBehaviour {
 			sample.heartrate = heartrate;
 			sample.position = position;
 			storedSamples.Add (sample);
-			Debug.Log (position.ToString ());
 
 			file.WriteLine (heartrate + "," + position.x + "," + position.y + "," + position.z);
 

@@ -8,48 +8,32 @@ public class DataCollector : MonoBehaviour {
 	public GameObject player;
 	public float frequency = 1.0f;
 	public HeartMonitor heartMonitor;
-	public GameObject dataColumn;
+	public GameObject DataColumn;
 
 	float timer = 0.0f;
-	List<data> storedSamples;
+	List<Data> storedSamples = new List<Data> ();
 
 	float minimum, maximum;
 	string fileName;
 	StreamWriter file;
 
 	//Data for image generation later on
-	struct data
+	struct Data
 	{
 		public float heartrate;
 		public Vector3 position;
 	}
-		
-	void Start()
-	{
-		timer = frequency;
-		storedSamples = new List<data> ();
-		minimum = 90;
-		maximum = 91;
-
-		int i = 0;
-		while (File.Exists ("Data/Session_" + i + ".txt"))
-			i++;
-		fileName = "Data/Session_" + i + ".txt";
-		FileStream c = File.Create (fileName);
-		c.Close ();
-		file = new StreamWriter(fileName);
-	}
 
 	void OnDestroy()
 	{
-		file.Close ();
+		reset ();
 	}
 
 	void FixedUpdate()
 	{
-		if(LevelController.isReplay)
+		if (LevelController.isReplay)
 			replayData ();
-		else
+		else if (LevelController.isGame && !LevelController.isPaused)
 			storeSamples ();
 	}
 
@@ -66,7 +50,7 @@ public class DataCollector : MonoBehaviour {
 			if (heartrate < minimum)
 				minimum = heartrate;
 			
-			data sample = new data ();
+			Data sample = new Data ();
 			sample.heartrate = heartrate;
 			sample.position = position;
 			storedSamples.Add (sample);
@@ -80,7 +64,7 @@ public class DataCollector : MonoBehaviour {
 		}
 	}
 
-	//Replays previously stored data
+	//Replays previously stored Data
 	int i = 0;
 	void replayData()
 	{
@@ -88,7 +72,7 @@ public class DataCollector : MonoBehaviour {
 		{
 			Vector3 position = storedSamples [i].position;
 
-			GameObject obj = (GameObject) Instantiate (dataColumn);
+			GameObject obj = (GameObject) Instantiate (DataColumn);
 			obj.transform.position = position;
 			obj.GetComponent<Renderer> ().material = new Material(obj.GetComponent<Renderer> ().sharedMaterial);
 			obj.GetComponent<DataColumn> ().setDataCollector (this);
@@ -140,6 +124,48 @@ public class DataCollector : MonoBehaviour {
 		}
 
 		return new Vector3(0.5f, value, 0.5f);
+	}
+
+	public void loadSamples()
+	{
+		storedSamples.Clear ();
+		minimum = 90;
+		maximum = 91;
+		StreamReader read = new StreamReader (LevelController.replaySession);
+		while (!read.EndOfStream)
+		{
+			string[] values = read.ReadLine ().Split (",".ToCharArray(), 4);
+			Data data = new Data();
+			data.heartrate = float.Parse(values [0]);
+			if (data.heartrate > maximum)
+				maximum = data.heartrate;
+			if (data.heartrate < minimum)
+				minimum = data.heartrate;
+			data.position = new Vector3 (float.Parse (values [1]), float.Parse (values [2]), float.Parse (values [3]));
+			storedSamples.Add (data);
+		}
+		read.Close ();
+	}
+
+	public void createSampleFile()
+	{
+		int i = 0;
+		while (File.Exists ("Data/Session_" + i + ".txt"))
+			i++;
+		fileName = "Data/Session_" + i + ".txt";
+		FileStream c = File.Create (fileName);
+		c.Close ();
+		file = new StreamWriter(fileName);
+	}
+
+	public void reset()
+	{
+		timer = frequency;
+		storedSamples.Clear();
+		minimum = 90;
+		maximum = 91;
+		if(file != null)
+			file.Close ();
 	}
 		
 }

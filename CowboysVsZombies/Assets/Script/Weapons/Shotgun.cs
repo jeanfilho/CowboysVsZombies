@@ -9,7 +9,8 @@ public class Shotgun : Weapon {
 	private int remainingBulletsOverall=100;
 	public int remainingBullets;
 	private int damage=10;
-	private bool shootable;
+	private bool shootable=true;
+
 
 	// Use this for initialization
 	void Start () 
@@ -71,5 +72,15 @@ public class Shotgun : Weapon {
 	public override bool isEmpty()
 	{
 		return this.remainingBullets == 0;
+	}
+
+	public override int getMunition()
+	{
+		return remainingBullets;
+	}
+
+	public override int getMunitionAll()
+	{
+		return remainingBulletsOverall;
 	}
 }

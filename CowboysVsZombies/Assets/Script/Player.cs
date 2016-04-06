@@ -19,8 +19,10 @@ public class Player : MonoBehaviour {
 
 	public Weapon actualWeapon;
 	private bool shootable=true;
-	private bool reload=false;
+	public bool reload=false;
 	private string weaponSelected;
+	private float counter = 0;
+	private bool counterActive=false;
 
 
 
@@ -36,8 +38,13 @@ public class Player : MonoBehaviour {
 		Shotgun = actualWeapon;
 		Revolver= (Weapon)Instantiate(Revolver, WeaponSpawn.transform.position, WeaponSpawn.transform.rotation);
 		Revolver.transform.parent = WeaponSpawn.transform;
+		Revolver.gameObject.SetActive (false);
 		Rifle= (Weapon)Instantiate(Rifle, WeaponSpawn.transform.position, WeaponSpawn.transform.rotation);
 		Rifle.transform.parent = WeaponSpawn.transform;
+		Rifle.gameObject.SetActive (false);
+		reload = false;
+		shootable = true;
+
 
         // UI:
         healthText.text = "Health: " + GameData.Instance.getPlayerHealth();
@@ -46,6 +53,32 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
+		if (counterActive) 
+		{
+			counter += Time.deltaTime;
+
+			if (actualWeapon.gameObject.GetComponent<Animator> ().GetBool("Reload")==true)
+			{
+				if (counter >= 1.0) {
+					reload = false;
+					actualWeapon.gameObject.GetComponent<Animator> ().SetBool ("Reload", false);
+					counterActive = false;
+					shootable = true;
+					counter = 0;
+				}
+			} 
+			else if (actualWeapon.gameObject.GetComponent<Animator> ().GetBool("Shoot")==true)
+			{
+				if (counter >= 0.49) 
+				{
+					actualWeapon.gameObject.GetComponent<Animator> ().SetBool ("Shoot", false);
+					counterActive = false;
+					shootable = true;
+					counter = 0;
+				}
+			}
+		}
+
 		if (Input.GetKeyDown (KeyCode.C)) 
 		{
 			if (weaponSelected.Equals ("Shotgun")) 
@@ -72,8 +105,8 @@ public class Player : MonoBehaviour {
 
 	void FixedUpdate ()
 	{
-		reloadWeapon ();
 		shoot ();
+		reloadWeapon ();
 	}
 
 	void changeWeapon(string newWeapon)
@@ -119,13 +152,14 @@ public class Player : MonoBehaviour {
 	private void shoot()
 	{
 		
-		if (Input.GetMouseButtonDown(0)&&shootable && !reload) 
+		if (Input.GetMouseButtonDown(0)&&shootable && reload==false) 
 		{
-			shootable = false;
 			if (actualWeapon.shoot () == true) 
 			{
-				
-				shootable = true;	
+				Debug.Log ("Shoot");
+				shootable = false;
+				actualWeapon.gameObject.GetComponent<Animator>().SetBool("Shoot",true);
+				counterActive = true;
 			} 
 			else 
 			{
@@ -137,18 +171,14 @@ public class Player : MonoBehaviour {
 
 	private void reloadWeapon()
 	{
-		if (actualWeapon.isEmpty () || Input.GetKeyDown (KeyCode.R)) 
+		if ((actualWeapon.isEmpty () || Input.GetKeyDown (KeyCode.R)) && (actualWeapon.gameObject.GetComponent<Animator> ().GetBool("Shoot")==false)&& reload==false)
 		{
 			shootable = false;
 			reload = true;
 			if (actualWeapon.reload()) 
 			{
-				//actualWeapon.GetComponent<Animation>.Play (actualWeapon.GetComponent<Animation>.ReloadAnimation);
-				/*	if (actualWeapon.animation [actualWeapon.ReloadAnimation.name].time >= actualWeapon.animation [actualWeapon.ReloadAnimation.name].length - 0.3) 
-				{*/
-					shootable = true;
-					reload = false;
-				//}
+				actualWeapon.gameObject.GetComponent<Animator>().SetBool("Reload",true);
+				counterActive = true;
 			} 
 			else 
 			{
@@ -157,6 +187,16 @@ public class Player : MonoBehaviour {
 				reload = false;
 			}
 		}
+	}
+
+	public int getActualWPBulletsMag()
+	{
+		return actualWeapon.getMunition ();
+	}
+
+	public int getActualWPBulletsOverAll()
+	{
+		return actualWeapon.getMunitionAll ();
 	}
 
 

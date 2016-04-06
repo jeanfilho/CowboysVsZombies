@@ -27,6 +27,10 @@ public abstract class Weapon : MonoBehaviour {
 	
 	}
 
+	public abstract int getMunition();
+
+	public abstract int getMunitionAll();
+
 	public abstract bool isEmpty ();
 
 	public abstract bool shoot ();

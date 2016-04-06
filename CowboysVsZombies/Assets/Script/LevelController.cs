@@ -121,7 +121,7 @@ public class LevelController : MonoBehaviour {
 		isPaused = false;
 		isGame = false;
 		isReplay = false;
-		SceneManager.LoadScene ("Level01");
+		SceneManager.LoadScene ("Level01", LoadSceneMode.Single);
 	}
 
 }

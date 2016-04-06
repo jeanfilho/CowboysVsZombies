@@ -33,6 +33,10 @@ public class LevelController : MonoBehaviour {
 	public Canvas pauseMenu;
 	public Dropdown sessions;
 
+	void OnStart()
+	{
+		Cursor.visible = true;
+	}
 
 	void OnLevelWasLoaded(int level)
 	{
@@ -78,7 +82,7 @@ public class LevelController : MonoBehaviour {
 
 	void Update()
 	{
-		if(Input.GetKeyDown(KeyCode.Escape))
+		if(Input.GetKeyDown(KeyCode.Escape) && (isGame || isReplay))
 		{
 			if (!isPaused)
 			{

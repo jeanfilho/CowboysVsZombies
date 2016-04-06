@@ -12,12 +12,16 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 
-	public GameObject Shotgun;
-	public GameObject Revolver;
-	public GameObject Rifle;
+	public Weapon Shotgun;
+	public Weapon Revolver;
+	public Weapon Rifle;
 	public GameObject WeaponSpawn;
+
+	public Weapon actualWeapon;
+	private bool shootable=true;
+	private bool reload=false;
 	private string weaponSelected;
-	public GameObject actualWeapon;
+
 
 
     // UI:
@@ -27,8 +31,13 @@ public class Player : MonoBehaviour {
 	void Start () 
 	{
 		weaponSelected="Shotgun";
-		actualWeapon= (GameObject)Instantiate(getactualWeapon(), WeaponSpawn.transform.position, WeaponSpawn.transform.rotation);
+		actualWeapon= (Weapon)Instantiate(getactualWeapon(), WeaponSpawn.transform.position, WeaponSpawn.transform.rotation);
 		actualWeapon.transform.parent = WeaponSpawn.transform;
+		Shotgun = actualWeapon;
+		Revolver= (Weapon)Instantiate(Revolver, WeaponSpawn.transform.position, WeaponSpawn.transform.rotation);
+		Revolver.transform.parent = WeaponSpawn.transform;
+		Rifle= (Weapon)Instantiate(Rifle, WeaponSpawn.transform.position, WeaponSpawn.transform.rotation);
+		Rifle.transform.parent = WeaponSpawn.transform;
 
         // UI:
         healthText.text = "Health: " + GameData.Instance.getPlayerHealth();
@@ -39,20 +48,32 @@ public class Player : MonoBehaviour {
 	{
 		if (Input.GetKeyDown (KeyCode.C)) 
 		{
-			Destroy (actualWeapon);
-			if (weaponSelected.Equals ("Shotgun")) {
+			if (weaponSelected.Equals ("Shotgun")) 
+			{
+				Shotgun.gameObject.SetActive (false);
 				changeWeapon ("Revolver");
+				Revolver.gameObject.SetActive (true);
 			}
 		 	else if (weaponSelected.Equals ("Revolver"))
 		    {
+				Revolver.gameObject.SetActive (false);
 				changeWeapon ("Rifle");
+				Rifle.gameObject.SetActive (true);
 				
 			} 
 			else 
 			{
+				Rifle.gameObject.SetActive (false);
 				changeWeapon ("Shotgun");
+				Shotgun.gameObject.SetActive (true);
 			}
 		}
+	}
+
+	void FixedUpdate ()
+	{
+		reloadWeapon ();
+		shoot ();
 	}
 
 	void changeWeapon(string newWeapon)
@@ -62,12 +83,16 @@ public class Player : MonoBehaviour {
 		} 
 		else {
 			weaponSelected = newWeapon;
-			actualWeapon= (GameObject)Instantiate(getactualWeapon(), WeaponSpawn.transform.position, WeaponSpawn.transform.rotation);
+			actualWeapon=getactualWeapon();
+			/*
+			weaponSelected = newWeapon;
+			actualWeapon= (Weapon)Instantiate(getactualWeapon(), WeaponSpawn.transform.position, WeaponSpawn.transform.rotation);
 			actualWeapon.transform.parent = WeaponSpawn.transform;
+			*/
 		}
 	}
 
-	GameObject getactualWeapon()
+	Weapon getactualWeapon()
 	{
 		if (weaponSelected.Equals ("Shotgun")) 
 		{
@@ -89,4 +114,50 @@ public class Player : MonoBehaviour {
         GameData.Instance.changePlayerHealth(value);
         healthText.text = "Health: " + GameData.Instance.getPlayerHealth();
     }
+
+
+	private void shoot()
+	{
+		
+		if (Input.GetMouseButtonDown(0)&&shootable && !reload) 
+		{
+			shootable = false;
+			if (actualWeapon.shoot () == true) 
+			{
+				
+				shootable = true;	
+			} 
+			else 
+			{
+				//Do Something
+			}
+
+		}
+	}
+
+	private void reloadWeapon()
+	{
+		if (actualWeapon.isEmpty () || Input.GetKeyDown (KeyCode.R)) 
+		{
+			shootable = false;
+			reload = true;
+			if (actualWeapon.reload()) 
+			{
+				//actualWeapon.GetComponent<Animation>.Play (actualWeapon.GetComponent<Animation>.ReloadAnimation);
+				/*	if (actualWeapon.animation [actualWeapon.ReloadAnimation.name].time >= actualWeapon.animation [actualWeapon.ReloadAnimation.name].length - 0.3) 
+				{*/
+					shootable = true;
+					reload = false;
+				//}
+			} 
+			else 
+			{
+				this.changeWeapon ("Revolver");
+				shootable = true;
+				reload = false;
+			}
+		}
+	}
+
+
 }

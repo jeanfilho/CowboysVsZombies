@@ -12,7 +12,7 @@ public class DataCollector : MonoBehaviour {
 
 	float timer = 0.0f;
 	List<data> storedSamples;
-	bool isReplay;
+
 	float minimum, maximum;
 	string fileName;
 	StreamWriter file;
@@ -47,7 +47,7 @@ public class DataCollector : MonoBehaviour {
 
 	void FixedUpdate()
 	{
-		if(isReplay)
+		if(LevelController.isReplay)
 			replayData ();
 		else
 			storeSamples ();

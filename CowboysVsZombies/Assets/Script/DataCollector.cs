@@ -32,9 +32,9 @@ public class DataCollector : MonoBehaviour {
 		maximum = 91;
 
 		int i = 0;
-		while (File.Exists ("Session_" + i + ".txt"))
+		while (File.Exists ("Data/Session_" + i + ".txt"))
 			i++;
-		fileName = "Session_" + i + ".txt";
+		fileName = "Data/Session_" + i + ".txt";
 		FileStream c = File.Create (fileName);
 		c.Close ();
 		file = new StreamWriter(fileName);

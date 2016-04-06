@@ -13,7 +13,8 @@ public class DataCollector : MonoBehaviour {
 	float timer = 0.0f;
 	List<Data> storedSamples = new List<Data> ();
 
-	float minimum, maximum;
+	float minimum = 90;
+	float maximum = 91;
 	string fileName;
 	StreamWriter file;
 
@@ -92,7 +93,7 @@ public class DataCollector : MonoBehaviour {
 		Color result;
 		float green = 1;
 		float red = 0;
-		if (maximum - minimum != 0)
+		if (maximum - minimum > 0)
 		{
 			value = (value - minimum) / (maximum - minimum);
 			value *= 2; //(From (0,255,0) to (255,255,0) to (255,0,0))
@@ -128,9 +129,6 @@ public class DataCollector : MonoBehaviour {
 
 	public void loadSamples()
 	{
-		storedSamples.Clear ();
-		minimum = 90;
-		maximum = 91;
 		StreamReader read = new StreamReader (LevelController.replaySession);
 		while (!read.EndOfStream)
 		{
@@ -150,9 +148,9 @@ public class DataCollector : MonoBehaviour {
 	public void createSampleFile()
 	{
 		int i = 0;
-		while (File.Exists ("Data/Session_" + i + ".txt"))
+		while (File.Exists ("Data/Session_" + i.ToString("D3") + ".txt"))
 			i++;
-		fileName = "Data/Session_" + i + ".txt";
+		fileName = "Data/Session_" + i.ToString("D3") + ".txt";
 		FileStream c = File.Create (fileName);
 		c.Close ();
 		file = new StreamWriter(fileName);

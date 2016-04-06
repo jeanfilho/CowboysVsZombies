@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+
 /*
  * This class is used for:
  * -Game Logic
@@ -12,7 +13,8 @@ using System.IO;
  * -Difficulty level correlated to the heartbeat
  * 
  */
-public class LevelController : MonoBehaviour {
+public class LevelController : MonoBehaviour
+{
 	
 	[HideInInspector]
 	public static float ScorePoints;
@@ -26,6 +28,7 @@ public class LevelController : MonoBehaviour {
 	public static string replaySession;
 
 	public GameObject player;
+	public GameObject stratCamera;
 	public DataCollector dataCollector;
 	public GameObject spawnPoint;
 	public Canvas mainMenu;
@@ -33,38 +36,38 @@ public class LevelController : MonoBehaviour {
 	public Canvas pauseMenu;
 	public Dropdown sessions;
 
-	void OnStart()
+	void OnStart ()
 	{
 		Cursor.visible = true;
 	}
 
-	void OnLevelWasLoaded(int level)
+	void OnLevelWasLoaded (int level)
 	{
 		Cursor.visible = true;
 	}
 
-	public void startGame()
+	public void startGame ()
 	{
 		isGame = true;
 		dataCollector.createSampleFile ();
 		spawnPlayer ();
 	}
 
-	public void selectReplay()
+	public void selectReplay ()
 	{
 		mainMenu.enabled = false;
 		replayMenu.enabled = true;
-		sessions.ClearOptions();
+		sessions.ClearOptions ();
 		sessions.AddOptions (new List<string> (Directory.GetFiles ("Data/")));
 	}
 
-	public void backToMainMenu(Canvas current)
+	public void backToMainMenu (Canvas current)
 	{
 		current.enabled = false;
 		mainMenu.enabled = true;
 	}
 
-	public void replayGame(Canvas current)
+	public void replayGame (Canvas current)
 	{
 		LevelController.replaySession = sessions.options [sessions.value].text;
 		Debug.Log ("Current session: " + LevelController.replaySession);
@@ -74,15 +77,16 @@ public class LevelController : MonoBehaviour {
 		spawnPlayer ();
 	}
 
-	public void exit()
+	public void exit ()
 	{
 		Debug.Log ("Exit");
 		Application.Quit ();
 	}
 
-	void Update()
+	bool backToRTSCamera;
+	void Update ()
 	{
-		if(Input.GetKeyDown(KeyCode.Escape) && (isGame || isReplay))
+		if (Input.GetKeyDown (KeyCode.Escape) && (isGame || isReplay))
 		{
 			if (!isPaused)
 			{
@@ -91,7 +95,15 @@ public class LevelController : MonoBehaviour {
 				GetComponent<Camera> ().enabled = true;
 				mainMenu.enabled = false;
 				pauseMenu.enabled = true;
-				player.SetActive (false);
+				if (stratCamera.activeSelf)
+				{
+					stratCamera.SetActive (false);
+					backToRTSCamera = true;
+
+				} else
+				{
+					player.SetActive (false);
+				}
 
 			} else
 			{
@@ -100,12 +112,35 @@ public class LevelController : MonoBehaviour {
 				GetComponent<Camera> ().enabled = false;
 				mainMenu.enabled = true;
 				pauseMenu.enabled = false;
+				if (backToRTSCamera)
+				{
+					stratCamera.SetActive (true);
+					backToRTSCamera = false;
+
+				} else
+				{
+					player.SetActive(true);
+				}
+			}
+		} else if (Input.GetKeyDown (KeyCode.Tab) && !isPaused && isReplay)
+		{
+			if (stratCamera.activeSelf)
+			{
+				stratCamera.SetActive (false);
 				player.SetActive (true);
+
+			} else
+			{
+				stratCamera.SetActive (true);
+				player.SetActive (false);
 			}
 		}
+				
+
+
 	}
 
-	void spawnPlayer()
+	void spawnPlayer ()
 	{
 		player.transform.position = spawnPoint.transform.position;
 		player.transform.rotation = spawnPoint.transform.rotation;
@@ -115,7 +150,7 @@ public class LevelController : MonoBehaviour {
 		GetComponent<Camera> ().enabled = false;
 	}
 
-	public void resetGame()
+	public void resetGame ()
 	{
 		dataCollector.reset ();
 		isPaused = false;

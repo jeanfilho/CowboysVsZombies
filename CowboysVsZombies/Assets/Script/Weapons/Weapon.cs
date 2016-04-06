@@ -11,7 +11,11 @@ using System.Collections;
  * -Weapon Level
  * 
  */
-public class Weapon : MonoBehaviour {
+public abstract class Weapon : MonoBehaviour {
+
+
+	public AnimationClip ReloadAnimation;
+	public AnimationClip ShootAnimation;
 
 	// Use this for initialization
 	void Start () {
@@ -22,4 +26,10 @@ public class Weapon : MonoBehaviour {
 	void Update () {
 	
 	}
+
+	public abstract bool isEmpty ();
+
+	public abstract bool shoot ();
+
+	public abstract bool reload ();
 }

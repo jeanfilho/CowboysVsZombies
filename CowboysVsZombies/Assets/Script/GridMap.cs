@@ -26,7 +26,7 @@ public class GridMap : MonoBehaviour {
 		int posY = Random.Range (0, 40);
 		if (!grid [posX,posY]) {
 			GameObject spawnInst = (GameObject)Instantiate (spawner, new Vector3 ((posX-20) * 2 + 1, 0, (posY-20) * 2 + 1), Quaternion.identity);
-			spawnInst.GetComponent<AxeTestScript> ().spinTrue ();
+            spawnInst.GetComponent<ZombieSpawner>().initialize(player);
 			grid [posX,posY] = true;
 		}
 	}
@@ -49,7 +49,7 @@ public class GridMap : MonoBehaviour {
 		if (!grid [lowestX,lowestY]) {
 			// replace new Vector3(...) with NavMeshHit hit; NavMesh.SamplePosition(Vector3 ((lowestX-20) * 2 + 1, 0, (lowestY-20) * 2 + 1), hit, 4,NavMesh.AllAreas)
 			GameObject spawnInst = (GameObject)Instantiate (spawner, new Vector3 ((lowestX-20) * 2 + 1, 0, (lowestY-20) * 2 + 1), Quaternion.identity);
-			spawnInst.GetComponent<AxeTestScript> ().spinTrue ();
+			spawnInst.GetComponent<ZombieSpawner> ().initialize (player);
 			grid [lowestX,lowestY] = true;
 		}
 

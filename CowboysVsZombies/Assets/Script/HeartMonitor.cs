@@ -11,6 +11,11 @@ public class HeartMonitor : MonoBehaviour {
 	[HideInInspector]
 	public float heartrate = 0;
 
+	private float heartrate_falling=120;
+	private float heartrate_rising=30;
+	private float heartrate_alternating= 60;
+	private bool  heartrate_alternating_up=true;
+
 	void Start () {
 		// Start communication with heart monitor
 		try
@@ -112,5 +117,33 @@ public class HeartMonitor : MonoBehaviour {
 				crc = (byte)(crc >> 1);
 		}
 		return crc;
+	}
+
+
+
+
+	public float sampleHeartRate_constantFalling(){
+		heartrate_rising-=0.1f;
+		if (heartrate_falling <= 30)
+			heartrate_falling = 120;
+		return heartrate_rising;
+	}
+	public float sampleHeartRate_constantRising(){
+		heartrate_rising+=0.1f;
+		if (heartrate_falling >= 120)
+			heartrate_falling = 30;
+		return heartrate_rising;
+	}
+	public float sampleHeartRate_alternating(){
+		if (heartrate_alternating_up) {
+			heartrate_alternating += 0.1f;
+			if (heartrate_alternating >= 120)
+				heartrate_alternating_up = false;
+		} else {
+			heartrate_alternating-=0.1f;
+			if (heartrate_alternating <= 30)
+				heartrate_alternating_up = true;
+		}
+		return heartrate_alternating;
 	}
 }

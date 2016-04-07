@@ -57,5 +57,30 @@ public class GameData
         }
     }
 
+	private float zombieHPModifier = 1.0f;
+	public float getZombieHPModifier(){
+		return zombieHPModifier;
+	}
+	public void setZombieHPModifier(float value){
+		zombieHPModifier = value;
+	}
+	private float zombieDMGModifier = 1.0f;
+	public float getZombieDMGModifier(){
+		return zombieDMGModifier;
+	}
+	public void setZombieDMGModifier(float value){
+		zombieDMGModifier = value;
+	}
+
+	private float score = 0;
+	public void setScore(float score)
+	{
+		this.score = score;
+	}
+	public float getScore()
+	{
+		return score;
+	}
+
 }
 

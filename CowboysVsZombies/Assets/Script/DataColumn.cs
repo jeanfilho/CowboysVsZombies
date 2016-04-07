@@ -13,6 +13,8 @@ public class DataColumn : MonoBehaviour {
 	public DataCollector dc;
 	public float value;
 
+	float ttl = 30;
+
 	// Use this for initialization
 	void Start () {
 	}
@@ -29,6 +31,11 @@ public class DataColumn : MonoBehaviour {
 			newPos.y = transform.localScale.y / 2;
 			transform.position = newPos;
 		}
+
+		if (ttl <= 0)
+			Destroy (gameObject);
+		else
+			ttl -= Time.deltaTime;
 	}
 
 	public void setDataCollector(DataCollector dc)

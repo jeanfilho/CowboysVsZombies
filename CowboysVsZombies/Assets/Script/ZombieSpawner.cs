@@ -48,6 +48,7 @@ public class ZombieSpawner : MonoBehaviour {
         GameObject zombieSpawn = Instantiate(zombie, this.transform.position, this.transform.rotation) as GameObject;
         zombieSpawn.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
         zombieSpawn.GetComponent<SimpleNavMeshAgent>().initialize(playerCharacter);
+		//zombieSpawn.GetComponent<Zombie>().  "setDMG/HPModifier"
     }
 
     public void initialize(GameObject player)

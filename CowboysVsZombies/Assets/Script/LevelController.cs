@@ -35,7 +35,6 @@ public class LevelController : MonoBehaviour
 	public Canvas mainMenu;
 	public Canvas replayMenu;
 	public Canvas pauseMenu;
-	public Canvas HUD;
 	public Dropdown sessions;
 
 	public HeartMonitor heartMonitor;
@@ -56,7 +55,6 @@ public class LevelController : MonoBehaviour
 	public void startGame ()
 	{
 		isGame = true;
-		HUD.enabled = true;
 		dataCollector.createSampleFile ();
 		spawnPlayer ();
 	}
@@ -103,9 +101,9 @@ public class LevelController : MonoBehaviour
 			{
 				isPaused = true;
 				Cursor.visible = true;
+				Cursor.lockState = CursorLockMode.Confined;
 				GetComponent<Camera> ().enabled = true;
 				mainMenu.enabled = false;
-				HUD.enabled = false;
 				pauseMenu.enabled = true;
 				if (stratCamera.activeSelf)
 				{
@@ -121,9 +119,9 @@ public class LevelController : MonoBehaviour
 			{
 				isPaused = false;
 				Cursor.visible = false;
+				Cursor.lockState = CursorLockMode.Locked;
 				GetComponent<Camera> ().enabled = false;
 				mainMenu.enabled = true;
-				HUD.enabled = true;
 				pauseMenu.enabled = false;
 				if (backToRTSCamera)
 				{
@@ -153,7 +151,7 @@ public class LevelController : MonoBehaviour
 				
 		//TODO: Finetuning of difficulty formulas, fitting to actual heartrate values
 		if (isGame) {
-			float hr = heartMonitor.sampleHeartRate_alternating ();
+			float hr = heartMonitor.sampleHeartRate ();
 				
 			//Add heartrate to grid to determine spawning place
 			grid.addHeartRateInput (hr);

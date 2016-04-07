@@ -57,5 +57,11 @@ public class GameData
         }
     }
 
+	private float zombieHPModifier = 1.0f;
+	public float getZombieHPModifier(){
+		return zombieHPModifier;
+	}
+	public void setZombieHPModifier
+
 }
 

@@ -18,12 +18,23 @@ public class Zombie : MonoBehaviour
 	private float counter = 0;
 	private bool counterActive=false;
 
+    public float attackDuration = 0.1f;
+    public float attackCounter = 0;
+    public bool attacking = false;
+    private int attackID = -1;
+
+    private float attackCooldown = 0.8f;
+    private float attackCooldownCounter = 0;
+    private bool attackingCooldown = false;
+
+    public bool attackMode = false;
+
 
 	// Use this for initialization
 	void Start () 
 	{
 		this.gameObject.GetComponent<Animator>().SetBool("Dead",false);
-		this.gameObject.GetComponent<Animator>().SetBool("isWalking",false);
+		this.gameObject.GetComponent<Animator>().SetBool("isWalking",true);
 	}
 	
 	// Update is called once per frame
@@ -40,8 +51,26 @@ public class Zombie : MonoBehaviour
 			}
 		}
 
-
 		checkLifeHealth ();
+
+        if (attackMode && !attacking)
+        {
+            attacking = true;
+            attack();              
+        }
+        else if (attacking)
+        {
+            attackCounter += Time.deltaTime;
+            if (attackCounter >= attackDuration)
+            {
+                attackCounter = 0;
+                attacking = false;
+                this.gameObject.GetComponent<Animator>().SetBool("isAttacking", false);
+                this.gameObject.GetComponent<Animator>().SetBool("isBiting", false);
+                attackID = -1;
+                attackingCooldown = true;
+            }
+        }        
 	}
 
 	public int getHealth()
@@ -56,7 +85,21 @@ public class Zombie : MonoBehaviour
 
 	private void attack ()
 	{
-		//TODO
+        int attackStyle = Random.Range(0, 2);
+        attackID = attackStyle;
+
+        if (attackStyle > 0)
+        {       
+            this.gameObject.GetComponent<Animator>().SetBool("isAttacking", true);
+            this.gameObject.GetComponent<Animator>().SetBool("isBiting", false);
+        }
+        else
+        {
+            this.gameObject.GetComponent<Animator>().SetBool("isAttacking", false);
+            this.gameObject.GetComponent<Animator>().SetBool("isBiting", true);
+        }
+
+        
 	}
 
 	public void checkLifeHealth()
@@ -67,4 +110,34 @@ public class Zombie : MonoBehaviour
 			counterActive = true;
 		}
 	}
+
+    void OnTriggerEnter(Collider other)
+    {
+        attackMode = true;
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        attackMode = false;
+    }
+
+    public void setAttackMode(bool state)
+    {
+        attackMode = state;
+    }
+
+    public bool getAttackMode()
+    {
+        return attackMode;
+    }
+
+    public bool getAttacking()
+    {
+        return attacking;
+    }
+
+    public int getAttackID()
+    {
+        return attackID;
+    }
 }

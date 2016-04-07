@@ -7,6 +7,7 @@ public class HeartMonitor : MonoBehaviour {
 	SerialPort port;
 	bool isReady = false;
 	float timer = 1;
+
 	[HideInInspector]
 	public float heartrate = 0;
 
@@ -17,24 +18,27 @@ public class HeartMonitor : MonoBehaviour {
 
 	void Start () {
 		// Start communication with heart monitor
-		port = new SerialPort("\\\\.\\COM13", 115200, Parity.None, 8, StopBits.One);
-		port.Open ();
-		port.ReadTimeout = 1;
-		port.WriteTimeout = 1;
-		byte[] msg1 = { 0x02, 0x14, 1, 1, crc8PushByte(1,0), 0x03};
-		byte[] msg2 = { 0x02, 0x15, 1, 0, crc8PushByte(0,0), 0x03};
-		byte[] msg3 = { 0x02, 0x16, 1, 0, crc8PushByte(0,0), 0x03};
-		byte[] msg4 = { 0x02, 0x19, 1, 0, crc8PushByte(0,0), 0x03};
-		byte[] msg5 = { 0x02, 0x1E, 1, 0, crc8PushByte(0,0), 0x03};
-		byte[] msg6 = { 0x02, 0xBD, 1, 0, crc8PushByte(0,0), 0x03};
+		try
+		{
+			port = new SerialPort("\\\\.\\COM13", 115200, Parity.None, 8, StopBits.One);
+			port.Open ();
+			port.ReadTimeout = 1;
+			port.WriteTimeout = 1;
+			byte[] msg1 = { 0x02, 0x14, 1, 1, crc8PushByte (1, 0), 0x03 };
+			byte[] msg2 = { 0x02, 0x15, 1, 0, crc8PushByte (0, 0), 0x03 };
+			byte[] msg3 = { 0x02, 0x16, 1, 0, crc8PushByte (0, 0), 0x03 };
+			byte[] msg4 = { 0x02, 0x19, 1, 0, crc8PushByte (0, 0), 0x03 };
+			byte[] msg5 = { 0x02, 0x1E, 1, 0, crc8PushByte (0, 0), 0x03 };
+			byte[] msg6 = { 0x02, 0xBD, 1, 0, crc8PushByte (0, 0), 0x03 };
 
-		byte[] ans = new byte[1024];
-		port.Write (msg1, 0, 6);
-		port.Write (msg2, 0, 6);
-		port.Write (msg3, 0, 6);
-		port.Write (msg4, 0, 6);
-		port.Write (msg5, 0, 6);
-		port.Write (msg6, 0, 6);
+			byte[] ans = new byte[1024];
+			port.Write (msg1, 0, 6);
+			port.Write (msg2, 0, 6);
+			port.Write (msg3, 0, 6);
+			port.Write (msg4, 0, 6);
+			port.Write (msg5, 0, 6);
+			port.Write (msg6, 0, 6);
+		}catch { }
 
 		isReady = true;
 	}
@@ -46,13 +50,18 @@ public class HeartMonitor : MonoBehaviour {
 
 	void Update()
 	{
-		if (timer <= 0)
+		if (isReady)
 		{
-			heartrate = sampleHeartRate ();
-			timer = 1;
+			if (timer <= 0)
+			{
+				heartrate = sampleHeartRate ();
+				timer = 1;
+
+			} else
+			{
+				timer -= Time.deltaTime;
+			}
 		}
-		else
-			timer -= Time.deltaTime;
 	}
 
 	// Get samples from hear monitor
@@ -60,7 +69,7 @@ public class HeartMonitor : MonoBehaviour {
 	{
 		float value;
 
-		if (port.IsOpen && isReady)
+		if (port.IsOpen)
 		{
 			byte[] ans = new byte[1024];
 			try

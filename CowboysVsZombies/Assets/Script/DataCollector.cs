@@ -43,7 +43,7 @@ public class DataCollector : MonoBehaviour {
 	{
 		if (timer <= 0)
 		{
-			float heartrate = heartMonitor.getHeartRate ();
+			float heartrate = heartMonitor.sampleHeartRate ();
 			Vector3 position = player.transform.position;
 
 			if (heartrate > maximum)

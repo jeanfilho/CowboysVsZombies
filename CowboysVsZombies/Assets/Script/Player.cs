@@ -16,6 +16,8 @@ public class Player : MonoBehaviour {
 	public Weapon Revolver;
 	public Weapon Rifle;
 	public GameObject WeaponSpawn;
+	public ParticleEmitter Blood;
+	public ParticleSystem Explosion;
 
 	public Weapon actualWeapon;
 	private bool shootable=true;
@@ -47,7 +49,7 @@ public class Player : MonoBehaviour {
 
 
         // UI:
-        healthText.text = "Health: " + GameData.Instance.getPlayerHealth();
+        //healthText.text = "Health: " + GameData.Instance.getPlayerHealth();
 	}
 	
 	// Update is called once per frame
@@ -151,12 +153,35 @@ public class Player : MonoBehaviour {
 
 	private void shoot()
 	{
+		Ray ray = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Screen.height - Input.mousePosition.y,0));
+		RaycastHit hit;
 		
 		if (Input.GetMouseButtonDown(0)&&shootable && reload==false) 
 		{
 			if (actualWeapon.shoot () == true) 
 			{
 				Debug.Log ("Shoot");
+
+				if (Physics.Raycast (ray, out hit, 100, Physics.DefaultRaycastLayers)) 
+				{
+					//TODO Instantiate Blood Splatter
+
+					GameObject otherObj = hit.collider.gameObject;
+					if (otherObj.tag == "Enemy") {
+						//Instantiate(par, hit.point, Quaternion.LookRotation(hit.normal));
+						otherObj.gameObject.GetComponent<Zombie> ().setDamage (actualWeapon.getDamage ());
+					} 
+					else if (otherObj.tag == "Barrel") 
+					{
+						//Instantiate(Explosion, hit.point, Quaternion.LookRotation(hit.normal));
+						otherObj.gameObject.GetComponent<Barrel> ().applyShoot ();
+						//Destroy (otherObj.gameObject);
+					}
+				}
+
+
+
+
 				shootable = false;
 				actualWeapon.gameObject.GetComponent<Animator>().SetBool("Shoot",true);
 				counterActive = true;

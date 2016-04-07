@@ -19,6 +19,7 @@ public class SimpleNavMeshAgent : MonoBehaviour
     void Update()
     {
         agent.SetDestination(target.position);
+		checkDeath ();
     }
 
     public void setTarget(GameObject targetPlayer)
@@ -36,5 +37,13 @@ public class SimpleNavMeshAgent : MonoBehaviour
         setTarget(targetPlayer);
         setActive(true);
     }
+
+	private void checkDeath()
+	{
+		if (this.gameObject.GetComponent<Zombie> ().getHealth () <= 0) 
+		{
+			agent.Stop ();
+		}
+	}
 
 }

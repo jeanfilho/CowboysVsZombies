@@ -36,4 +36,6 @@ public abstract class Weapon : MonoBehaviour {
 	public abstract bool shoot ();
 
 	public abstract bool reload ();
+
+	public abstract int getDamage ();
 }

@@ -26,10 +26,11 @@ public class Player : MonoBehaviour {
 	private float counter = 0;
 	private bool counterActive=false;
 
-
+    public GameObject bloodSplatter;
+    public GameObject[] actionSign = new GameObject[5];
 
     // UI:
-    public Text healthText;
+ //   public Text healthText;
 
 	// Use this for initialization
 	void Start () 
@@ -147,7 +148,7 @@ public class Player : MonoBehaviour {
     public void changePlayerHealth(int value)
     {
         GameData.Instance.changePlayerHealth(value);
-        healthText.text = "Health: " + GameData.Instance.getPlayerHealth();
+   //     healthText.text = "Health: " + GameData.Instance.getPlayerHealth();
     }
 
 
@@ -170,12 +171,20 @@ public class Player : MonoBehaviour {
 					if (otherObj.tag == "Enemy") {
 						//Instantiate(par, hit.point, Quaternion.LookRotation(hit.normal));
 						otherObj.gameObject.GetComponent<Zombie> ().setDamage (actualWeapon.getDamage ());
+
+
+
+                        int actionSignID = Random.Range(0, 4);
+                        Instantiate(actionSign[actionSignID], hit.point, this.gameObject.transform.rotation);
+                        Instantiate(bloodSplatter, hit.point, otherObj.gameObject.transform.rotation);
 					} 
 					else if (otherObj.tag == "Barrel") 
 					{
 						//Instantiate(Explosion, hit.point, Quaternion.LookRotation(hit.normal));
 						otherObj.gameObject.GetComponent<Barrel> ().applyShoot ();
 						//Destroy (otherObj.gameObject);
+
+                        Instantiate(actionSign[2], hit.point, this.gameObject.transform.rotation);
 					}
 				}
 

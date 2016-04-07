@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class PlayerHUD : MonoBehaviour {
 
+    public Player player;
+
     public Image healthBarHUD;
     public Text ammoLoaded;
     public Text ammoCurrent;
@@ -11,13 +13,13 @@ public class PlayerHUD : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-     //   updateHealth();
-     //   updateAmmo();
+        updateHealth();
+        updateAmmo();
 	}
 
     public void updateHealth()
@@ -27,7 +29,7 @@ public class PlayerHUD : MonoBehaviour {
 
     public void updateAmmo()
     {
-    //    ammoLoaded.text = ;
-    //    ammoCurrent.text = ;
+        ammoLoaded.text = "" + player.getActualWPBulletsMag();
+        ammoCurrent.text = "" + player.getActualWPBulletsOverAll();
     }
 }

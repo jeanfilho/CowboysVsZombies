@@ -19,11 +19,11 @@ public class LevelController : MonoBehaviour
 	[HideInInspector]
 	public static float ScorePoints;
 	[HideInInspector]
-	public static bool isPaused;
+	public static bool isPaused = false;
 	[HideInInspector]
-	public static bool isReplay;
+	public static bool isReplay = false;
 	[HideInInspector]
-	public static bool isGame;
+	public static bool isGame = false;
 	[HideInInspector]
 	public static string replaySession;
 

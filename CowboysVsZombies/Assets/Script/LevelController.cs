@@ -34,6 +34,7 @@ public class LevelController : MonoBehaviour
 	public Canvas mainMenu;
 	public Canvas replayMenu;
 	public Canvas pauseMenu;
+	public Canvas HUD;
 	public Dropdown sessions;
 
 	void OnStart ()
@@ -49,6 +50,7 @@ public class LevelController : MonoBehaviour
 	public void startGame ()
 	{
 		isGame = true;
+		HUD.enabled = true;
 		dataCollector.createSampleFile ();
 		spawnPlayer ();
 	}
@@ -94,6 +96,7 @@ public class LevelController : MonoBehaviour
 				Cursor.visible = true;
 				GetComponent<Camera> ().enabled = true;
 				mainMenu.enabled = false;
+				HUD.enabled = false;
 				pauseMenu.enabled = true;
 				if (stratCamera.activeSelf)
 				{
@@ -111,6 +114,7 @@ public class LevelController : MonoBehaviour
 				Cursor.visible = false;
 				GetComponent<Camera> ().enabled = false;
 				mainMenu.enabled = true;
+				HUD.enabled = true;
 				pauseMenu.enabled = false;
 				if (backToRTSCamera)
 				{

@@ -148,6 +148,8 @@ public class DataCollector : MonoBehaviour {
 	public void createSampleFile()
 	{
 		int i = 0;
+		if(!Directory.Exists("Data/"))
+			Directory.CreateDirectory ("Data/");
 		while (File.Exists ("Data/Session_" + i.ToString("D3") + ".txt"))
 			i++;
 		fileName = "Data/Session_" + i.ToString("D3") + ".txt";

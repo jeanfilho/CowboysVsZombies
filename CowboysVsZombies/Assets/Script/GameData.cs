@@ -72,5 +72,15 @@ public class GameData
 		zombieDMGModifier = value;
 	}
 
+	private float score = 0;
+	public void setScore(float score)
+	{
+		this.score = score;
+	}
+	public float getScore()
+	{
+		return score;
+	}
+
 }
 

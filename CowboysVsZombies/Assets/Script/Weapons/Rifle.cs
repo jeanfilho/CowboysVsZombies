@@ -9,7 +9,7 @@ public class Rifle : Weapon {
 	private int magazineSize=10;
 	private int remainingBulletsOverall=100;
 	public int remainingBullets;
-	private int damage=10;
+	private int damage=40;
 	private bool shootable=true;
 
 	// Use this for initialization
@@ -28,12 +28,7 @@ public class Rifle : Weapon {
 			return reloadTime;
 		}
 	}
-
-	public int Damage {
-		get {
-			return damage;
-		}
-	}
+		
 
 	public override bool shoot()
 	{
@@ -82,6 +77,11 @@ public class Rifle : Weapon {
 	public override int getMunitionAll()
 	{
 		return remainingBulletsOverall;
+	}
+
+	public override int getDamage ()
+	{
+		return this.damage;
 	}
 
 }

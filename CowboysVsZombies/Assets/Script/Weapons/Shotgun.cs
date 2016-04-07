@@ -8,7 +8,7 @@ public class Shotgun : Weapon {
 	private int magazineSize=2;
 	private int remainingBulletsOverall=100;
 	public int remainingBullets;
-	private int damage=10;
+	private int damage=100;
 	private bool shootable=true;
 
 
@@ -29,11 +29,6 @@ public class Shotgun : Weapon {
 		}
 	}
 
-	public int Damage {
-		get {
-			return damage;
-		}
-	}
 
 	public override bool shoot()
 	{
@@ -53,8 +48,10 @@ public class Shotgun : Weapon {
 	public override bool reload()
 	{
 		this.shootable = false;
-		if (this.remainingBulletsOverall > 0) {
-			while ((magazineSize - remainingBullets) > 0 && remainingBulletsOverall > 0) {
+		if (this.remainingBulletsOverall > 0) 
+		{
+			while ((magazineSize - remainingBullets) > 0 && remainingBulletsOverall > 0) 
+			{
 				remainingBulletsOverall -= 1;
 				remainingBullets += 1;
 			}
@@ -82,5 +79,10 @@ public class Shotgun : Weapon {
 	public override int getMunitionAll()
 	{
 		return remainingBulletsOverall;
+	}
+
+	public override int getDamage ()
+	{
+		return this.damage;
 	}
 }

@@ -61,7 +61,16 @@ public class GameData
 	public float getZombieHPModifier(){
 		return zombieHPModifier;
 	}
-	public void setZombieHPModifier
+	public void setZombieHPModifier(float value){
+		zombieHPModifier = value;
+	}
+	private float zombieDMGModifier = 1.0f;
+	public float getZombieDMGModifier(){
+		return zombieDMGModifier;
+	}
+	public void setZombieDMGModifier(float value){
+		zombieDMGModifier = value;
+	}
 
 }
 

@@ -149,8 +149,8 @@ public class LevelController : MonoBehaviour
 				
 		//TODO: Finetuning of difficulty formulas, fitting to actual heartrate values
 		if (isGame) {
-			float hr = heartMonitor.getHeartRate ();
-
+			float hr = heartMonitor.sampleHeartRate_alternating ();
+				
 			//Add heartrate to grid to determine spawning place
 			grid.addHeartRateInput (hr);
 

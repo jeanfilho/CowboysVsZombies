@@ -81,8 +81,8 @@ public class GridMap : MonoBehaviour {
 	}
 
 	public void addHeartRateInput(float hr){
-		int x = Mathf.FloorToInt((player.transform.position.z + 40) / 2);
-		int y = Mathf.FloorToInt((player.transform.position.x + 40) / 2);
+		int x = Mathf.Abs (Mathf.FloorToInt ((player.transform.position.z + 40) / 2));
+		int y = Mathf.Abs(Mathf.FloorToInt((player.transform.position.x + 40) / 2));
 		avg_hr_grid_count [x, y]++;
 		avg_hr_grid [x, y] = ((avg_hr_grid [x, y] * (avg_hr_grid_count [x, y] - 1)) + hr) / avg_hr_grid_count [x, y];
 	}

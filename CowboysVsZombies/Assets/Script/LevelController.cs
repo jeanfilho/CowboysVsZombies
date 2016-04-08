@@ -193,6 +193,8 @@ public class LevelController : MonoBehaviour
 		isPaused = false;
 		isGame = false;
 		isReplay = false;
+		GameData.Instance.setPlayerHealth (50);
+		GameData.Instance.setScore (0);
 		showMenu (mainMenu);
 		SceneManager.LoadScene ("Level01", LoadSceneMode.Single);
 	}
@@ -210,9 +212,12 @@ public class LevelController : MonoBehaviour
 	{
 		//Player Death
 		showMenu (pauseMenu);
+		Cursor.visible = true;
+		Cursor.lockState = CursorLockMode.None;
 		isGame = false;
 		GetComponent<Camera> ().enabled = true;
 		player.SetActive (false);
+		Debug.Log ("TEST");
 	}
 
 	void updateScore()

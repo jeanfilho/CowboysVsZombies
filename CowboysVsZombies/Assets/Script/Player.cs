@@ -169,7 +169,7 @@ public class Player : MonoBehaviour {
 		{
 			if (actualWeapon.shoot () == true) 
 			{
-				Debug.Log ("Shoot");
+				actualWeapon.GetComponent<AudioSource> ().Play ();
 
 				if (weaponSelected.Equals("Revolver")) {
 					Instantiate(muzzle, muzzle_revolver.transform.position, Quaternion.identity);

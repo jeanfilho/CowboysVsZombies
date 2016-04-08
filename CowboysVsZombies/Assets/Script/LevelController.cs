@@ -30,6 +30,10 @@ public class LevelController : MonoBehaviour
 	[HideInInspector]
 	public static string replaySession;
 
+	public AudioSource menuMusic;
+	public AudioListener menuListener;
+	public AudioSource playerMusic;
+
 	public GameObject player;
 	public GameObject stratCamera;
 	public GameObject spawnPoint;
@@ -108,7 +112,7 @@ public class LevelController : MonoBehaviour
 		updateScore ();
 
 		//Player Death
-		if (GameData.Instance.getPlayerHealth () <= 0)
+		if (GameData.Instance.getPlayerHealth () <= 0 && isGame)
 			playerDeath ();
 
 		//Input Handling
@@ -182,6 +186,7 @@ public class LevelController : MonoBehaviour
 		player.transform.position = spawnPoint.transform.position;
 		player.transform.rotation = spawnPoint.transform.rotation;
 		player.SetActive (true);
+		toggleMusic ();
 		isPaused = false;
 		Cursor.visible = false;
 		GetComponent<Camera> ().enabled = false;
@@ -212,12 +217,12 @@ public class LevelController : MonoBehaviour
 	{
 		//Player Death
 		showMenu (pauseMenu);
+		toggleMusic ();
 		Cursor.visible = true;
 		Cursor.lockState = CursorLockMode.None;
 		isGame = false;
 		GetComponent<Camera> ().enabled = true;
 		player.SetActive (false);
-		Debug.Log ("TEST");
 	}
 
 	void updateScore()
@@ -261,6 +266,7 @@ public class LevelController : MonoBehaviour
 				player.SetActive(true);
 			}
 		}
+		toggleMusic ();
 	}
 
 	void stratCameraToggle()
@@ -274,6 +280,19 @@ public class LevelController : MonoBehaviour
 		{
 			stratCamera.SetActive (true);
 			player.SetActive (false);
+		}
+	}
+
+	void toggleMusic()
+	{
+		if (menuMusic.isPlaying) {
+			menuMusic.Stop();
+			menuListener.enabled = false;
+			playerMusic.Play ();
+		} else {
+			menuListener.enabled = true;
+			menuMusic.Play ();
+			playerMusic.Pause ();
 		}
 	}
 }

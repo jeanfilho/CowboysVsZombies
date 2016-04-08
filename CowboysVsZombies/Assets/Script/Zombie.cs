@@ -29,6 +29,8 @@ public class Zombie : MonoBehaviour
 
     public bool attackMode = false;
 
+	float soundTimer = 5;
+
 
 	// Use this for initialization
 	void Start () 
@@ -40,6 +42,12 @@ public class Zombie : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+		if (soundTimer <= 0 && LevelController.isGame) {
+			GetComponent<AudioSource> ().Play ();
+			soundTimer = Random.Range (4, 16);
+		} else
+			soundTimer -= Time.deltaTime;
+
 		if (counterActive) {
 			counter += Time.deltaTime;
 			if (this.gameObject.GetComponent<Animator> ().GetBool ("Dead") == true) 

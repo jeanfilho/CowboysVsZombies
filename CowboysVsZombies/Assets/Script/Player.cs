@@ -29,6 +29,14 @@ public class Player : MonoBehaviour {
     public GameObject bloodSplatter;
     public GameObject[] actionSign = new GameObject[5];
 
+	public GameObject muzzle;
+
+	public GameObject muzzle_revolver;
+	public GameObject muzzle_shotgun_left;
+	public GameObject muzzle_shotgun_right;
+	public GameObject muzzle_rifle;
+
+
     // UI:
  //   public Text healthText;
 
@@ -162,6 +170,17 @@ public class Player : MonoBehaviour {
 			if (actualWeapon.shoot () == true) 
 			{
 				Debug.Log ("Shoot");
+
+				if (weaponSelected.Equals("Revolver")) {
+					Instantiate(muzzle, muzzle_revolver.transform.position, Quaternion.identity);
+				}
+				if (weaponSelected.Equals("Shotgun")) {
+					Instantiate(muzzle, muzzle_shotgun_left.transform.position, Quaternion.identity);
+					Instantiate(muzzle, muzzle_shotgun_right.transform.position, Quaternion.identity);
+				}
+				if (weaponSelected.Equals("Rifle")) {
+					Instantiate(muzzle, muzzle_rifle.transform.position, Quaternion.identity);
+				}
 
 				if (Physics.Raycast (ray, out hit, 100, Physics.DefaultRaycastLayers)) 
 				{

@@ -46,7 +46,10 @@ public class Zombie : MonoBehaviour
 			{
 				if (counter >= 3.0) 
 				{
+
+					GameData.Instance.setScore (GameData.Instance.getScore () + Mathf.FloorToInt(10*GameData.Instance.getZombieHPModifier()));
 					Destroy (this.gameObject);
+
 				}
 			}
 		}
@@ -76,6 +79,10 @@ public class Zombie : MonoBehaviour
 	public int getHealth()
 	{
 		return health;
+	}
+
+	public void setHealth(int value){
+		health = value;
 	}
 
 	public void setDamage(int Damage)

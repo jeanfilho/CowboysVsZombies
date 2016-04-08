@@ -15,11 +15,12 @@ public class GridMap : MonoBehaviour {
 		avg_hr_grid_count = new int[40,40];
 		for (int i = 0; i < avg_hr_grid.GetLength(0); i++) {
 			for (int j = 0; j < avg_hr_grid.GetLength (1); j++) {
-				avg_hr_grid[i,j] = 60;
-				avg_hr_grid_count [i,j] = 1;
+				avg_hr_grid[i,j] = 360;
+				avg_hr_grid_count [i,j] = 0;
 			}
 		}
 		initializeMap ();
+		SpawnSpawner ();
 	}
 
 	// Update is called once per frame
@@ -30,8 +31,8 @@ public class GridMap : MonoBehaviour {
 	}
 
 	public void SpawnAtRandom(){
-		int posX = Random.Range (0, 40);
-		int posY = Random.Range (0, 40);
+		int posX = Random.Range (1, 39);
+		int posY = Random.Range (1, 39);
 		if (!grid [posY,posX] && !grid[posY,posX-1] && !grid[posY,posX+1] && !grid[posY-1,posX] && !grid[posY+1,posX]) {
 			GameObject spawnInst = (GameObject)Instantiate (spawner, new Vector3 ((posX-20) * 2 + 1, 0, (posY-20) * 2 + 1), Quaternion.AngleAxis(Random.Range(0,360),new Vector3(0,1,0)));
 			spawnInst.GetComponent<ZombieSpawner> ().initialize (player);
@@ -47,14 +48,17 @@ public class GridMap : MonoBehaviour {
 		}
 	}
 
+	int lastSpawnX;
+	int lastSpawnY;
+
 	public void SpawnSpawner(){
 		// find lowest point
-		int lowestX = 0;
-		int lowestY = 0;
-		float lowest = 60;
+		int lowestX = 20;
+		int lowestY = 20;
+		float lowest = 360;
 		for (int i = 1; i < avg_hr_grid.GetLength(0)-1; i++) {
 			for (int j = 1; j < avg_hr_grid.GetLength (1)-1; j++) {
-				if (avg_hr_grid [i, j] <= lowest) {
+				if (avg_hr_grid [i, j] < lowest && !grid[i,j] ) {
 					lowest = avg_hr_grid [i, j];
 					lowestX = i;
 					lowestY = j;
@@ -62,22 +66,35 @@ public class GridMap : MonoBehaviour {
 			}
 		}
 
-		if (!grid [lowestY,lowestX] && !grid[lowestY,lowestX-1] && !grid[lowestY,lowestX+1] && !grid[lowestY-1,lowestX] && !grid[lowestY+1,lowestX]) {
-			// replace new Vector3(...) with NavMeshHit hit; NavMesh.SamplePosition(Vector3 ((lowestX-20) * 2 + 1, 0, (lowestY-20) * 2 + 1), hit, 4,NavMesh.AllAreas)
+		Debug.Log (lowest);
 
-			GameObject spawnInst = (GameObject)Instantiate (spawner, new Vector3 ((lowestY-20) * 2 + 1, 0, (lowestX-20) * 2 + 1), Quaternion.AngleAxis(Random.Range(0,360),new Vector3(0,1,0)));
-			spawnInst.GetComponent<ZombieSpawner> ().initialize (player);
-			Debug.Log ("Spawned spawner at " + lowestX + " " + lowestY);
-			grid [lowestX,lowestY] = true;
-			grid [lowestY,lowestX-1] = true;
-			grid [lowestY,lowestX+1] = true;
-			grid [lowestY-1,lowestX] = true;
-			grid [lowestY-1,lowestX+1] = true;
-			grid [lowestY-1,lowestX-1] = true;
-			grid [lowestY+1,lowestX] = true;
-			grid [lowestY+1,lowestX+1] = true;
-			grid [lowestY+1,lowestX-1] = true;
+		if ((lastSpawnX == lowestX) && (lastSpawnY == lowestY)) {
+			SpawnAtRandom ();
+			Debug.Log ("Spawned Randomly");
 		}
+		else{
+			if (!grid [lowestY,lowestX] && !grid[lowestY,lowestX-1] && !grid[lowestY,lowestX+1] && !grid[lowestY-1,lowestX] && !grid[lowestY+1,lowestX]) {
+				// replace new Vector3(...) with NavMeshHit hit; NavMesh.SamplePosition(Vector3 ((lowestX-20) * 2 + 1, 0, (lowestY-20) * 2 + 1), hit, 4,NavMesh.AllAreas)
+
+				GameObject spawnInst = (GameObject)Instantiate (spawner, new Vector3 ((lowestY-20) * 2 + 1, 0, (lowestX-20) * 2 + 1), Quaternion.AngleAxis(Random.Range(0,360),new Vector3(0,1,0)));
+				spawnInst.GetComponent<ZombieSpawner> ().initialize (player);
+
+				lastSpawnX = lowestX;
+				lastSpawnY = lowestY;
+				Debug.Log ("Spawned at lowest location");
+				Debug.Log ("Spawned spawner at " + lowestX + " " + lowestY);
+				grid [lowestX,lowestY] = true;
+				grid [lowestY,lowestX-1] = true;
+				grid [lowestY,lowestX+1] = true;
+				grid [lowestY-1,lowestX] = true;
+				grid [lowestY-1,lowestX+1] = true;
+				grid [lowestY-1,lowestX-1] = true;
+				grid [lowestY+1,lowestX] = true;
+				grid [lowestY+1,lowestX+1] = true;
+				grid [lowestY+1,lowestX-1] = true;
+			}
+		}
+
 	}
 
 	public void addHeartRateInput(float hr){
@@ -87,8 +104,11 @@ public class GridMap : MonoBehaviour {
 			x = 39;
 		if (y > 39)
 			y = 39;
+		
 		avg_hr_grid_count [x, y]++;
+
 		avg_hr_grid [x, y] = ((avg_hr_grid [x, y] * (avg_hr_grid_count [x, y] - 1)) + hr) / avg_hr_grid_count [x, y];
+
 	}
 
 	void initializeMap(){
@@ -164,6 +184,11 @@ public class GridMap : MonoBehaviour {
 		grid [36, 10] = true;
 		grid [36, 11] = true;
 
+		grid [28, 18] = true;
+		grid [29, 18] = true;
+		grid [30, 18] = true;
+		grid [31, 18] = true;
+		grid [32, 18] = true;
 		grid [28, 19] = true;
 		grid [29, 19] = true;
 		grid [30, 19] = true;
@@ -174,6 +199,16 @@ public class GridMap : MonoBehaviour {
 		grid [30, 20] = true;
 		grid [31, 20] = true;
 		grid [32, 20] = true;
+		grid [28, 21] = true;
+		grid [29, 21] = true;
+		grid [30, 21] = true;
+		grid [31, 21] = true;
+		grid [32, 21] = true;
+		grid [28, 22] = true;
+		grid [29, 22] = true;
+		grid [30, 22] = true;
+		grid [31, 22] = true;
+		grid [32, 22] = true;
 
 		grid [25, 21] = true;
 		grid [25, 22] = true;

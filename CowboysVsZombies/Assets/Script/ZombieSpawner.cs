@@ -14,8 +14,8 @@ public class ZombieSpawner : MonoBehaviour {
 
     public GameObject playerCharacter;
 
-    public float spawnRate = 2.0f;
-    private float spawnRateCounter = 0f;
+    public float spawnRate = 1.0f;
+    private float spawnRateCounter = 100f;
 
 	// Use this for initialization
 	void Start () {
@@ -31,8 +31,8 @@ public class ZombieSpawner : MonoBehaviour {
 
         if (active)
         {
-            spawnRateCounter = spawnRateCounter + Time.deltaTime * GameData.Instance.getSpawnRateAdjustment();
-            if (spawnRateCounter >= spawnRate)
+            spawnRateCounter = spawnRateCounter + Time.deltaTime;
+			if (spawnRateCounter >= 10.0f * spawnRate * GameData.Instance.getSpawnRateAdjustment())
             {
                 spawnZombie();
                 spawnRateCounter = 0;
@@ -48,7 +48,7 @@ public class ZombieSpawner : MonoBehaviour {
         GameObject zombieSpawn = Instantiate(zombie, this.transform.position, this.transform.rotation) as GameObject;
         zombieSpawn.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
         zombieSpawn.GetComponent<SimpleNavMeshAgent>().initialize(playerCharacter);
-		//zombieSpawn.GetComponent<Zombie>().  "setDMG/HPModifier"
+		zombieSpawn.GetComponent<Zombie> ().setHealth (Mathf.FloorToInt(100 * GameData.Instance.getZombieHPModifier ()));
     }
 
     public void initialize(GameObject player)

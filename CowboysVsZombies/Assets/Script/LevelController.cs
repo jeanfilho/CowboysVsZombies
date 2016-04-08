@@ -49,7 +49,7 @@ public class LevelController : MonoBehaviour
 	public HeartMonitor heartMonitor;
 	public GridMap grid;
 
-	public float spawnSpawnerTime = 5;
+	public float spawnSpawnerTime = 30;
 
 	void OnStart ()
 	{
@@ -96,7 +96,12 @@ public class LevelController : MonoBehaviour
 	}
 
 	float spawnSpawnerTime_counter = 0;
+	float hr_max=0;
+	float hr_min=0;
 	bool backToRTSCamera;
+	bool showcaseHROn = false;
+	float showcaseHR = 90;
+
 	void Update ()
 	{
 		//Score UI update
@@ -115,8 +120,37 @@ public class LevelController : MonoBehaviour
 		//Difficulty
 		//TODO: Finetuning of difficulty formulas, fitting to actual heartrate values
 		if (isGame) {
-			float hr = heartMonitor.sampleHeartRate ();
+			float hr = heartMonitor.sampleHeartRate();
 				
+			if (hr_max == 0 && hr_min == 0) {
+				hr_max = hr;
+				hr_min = hr;
+			}
+			if (hr < hr_min)
+				hr_min = hr;
+			if (hr > hr_max)
+				hr_max = hr;
+
+			//Toggle and modifiy showcaseHR to demonstrate effects
+			if (Input.GetKeyDown (KeyCode.U)) {
+				if (showcaseHROn)
+					showcaseHROn = false;
+				else
+					showcaseHROn = true;
+			}
+			if (showcaseHROn) {
+				if (Input.GetKeyDown (KeyCode.I)) {
+					showcaseHR++;
+				}
+				if (Input.GetKeyDown (KeyCode.O)) {
+					showcaseHR--;
+				}
+				hr = showcaseHR;
+			} 
+
+			float modifier_size = (hr_max - hr_min) / 10f;
+			float modifier = ((((hr-hr_min) / (hr_max - hr_min))) * 0.8f)+0.6f;
+
 			//Add heartrate to grid to determine spawning place
 			grid.addHeartRateInput (hr);
 
@@ -128,15 +162,16 @@ public class LevelController : MonoBehaviour
 			}
 
 			//ZombieSpawnrate
-			GameData.Instance.setSpawnRateAdjustment(hr/60);
+			GameData.Instance.setSpawnRateAdjustment(modifier*1.5f -0.4f );
 
 			//ZombieStrength
-			GameData.Instance.setZombieDMGModifier(hr/60);
-			GameData.Instance.setZombieHPModifier (hr/60);
+			GameData.Instance.setZombieDMGModifier(modifier);
+			GameData.Instance.setZombieHPModifier (modifier);
 
 			//Player Speed
-			player.GetComponent<FirstPersonController>().m_WalkSpeed = 5 * hr/60;
-			player.GetComponent<FirstPersonController>().m_RunSpeed = 10 * hr/60;
+			player.GetComponent<FirstPersonController>().m_WalkSpeed = 3 * modifier;
+			player.GetComponent<FirstPersonController>().m_RunSpeed = 8 * modifier;
+			player.GetComponent<FirstPersonController>().m_JumpSpeed = 7 * modifier;
 
 		}
 

@@ -26,7 +26,7 @@ public class ZombieWeapon : MonoBehaviour {
         {
             if (zombie.getAttackMode() && zombie.getAttacking() && zombie.getAttackID() == weaponID)
             {
-                other.gameObject.GetComponent<Player>().changePlayerHealth(-1 * attackDamage);
+				other.gameObject.GetComponent<Player>().changePlayerHealth(Mathf.FloorToInt(-1 * attackDamage * GameData.Instance.getZombieDMGModifier()));
             }
         }
     }

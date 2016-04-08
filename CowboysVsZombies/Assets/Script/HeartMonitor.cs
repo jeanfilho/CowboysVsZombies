@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 using System.IO.Ports;
 
@@ -12,8 +13,8 @@ public class HeartMonitor : MonoBehaviour {
 	public float heartrate = 0;
 
 	private float heartrate_falling=120;
-	private float heartrate_rising=30;
-	private float heartrate_alternating= 60;
+	private float heartrate_rising=60;
+	private float heartrate_alternating= 90;
 	private bool  heartrate_alternating_up=true;
 
 	void Start () {
@@ -100,7 +101,7 @@ public class HeartMonitor : MonoBehaviour {
 
 		} else
 		{
-			value = Random.Range (80.0f, 130.0f);
+			value = Random.Range (80.0f, 120.0f);
 		}
 		return value;
 	}
@@ -124,14 +125,14 @@ public class HeartMonitor : MonoBehaviour {
 
 	public float sampleHeartRate_constantFalling(){
 		heartrate_rising-=0.1f;
-		if (heartrate_falling <= 30)
+		if (heartrate_falling <= 60)
 			heartrate_falling = 120;
 		return heartrate_rising;
 	}
 	public float sampleHeartRate_constantRising(){
 		heartrate_rising+=0.1f;
 		if (heartrate_falling >= 120)
-			heartrate_falling = 30;
+			heartrate_falling = 60;
 		return heartrate_rising;
 	}
 	public float sampleHeartRate_alternating(){
@@ -141,7 +142,7 @@ public class HeartMonitor : MonoBehaviour {
 				heartrate_alternating_up = false;
 		} else {
 			heartrate_alternating-=0.1f;
-			if (heartrate_alternating <= 30)
+			if (heartrate_alternating <= 60)
 				heartrate_alternating_up = true;
 		}
 		return heartrate_alternating;

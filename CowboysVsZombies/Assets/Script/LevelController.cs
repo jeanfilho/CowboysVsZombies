@@ -174,8 +174,8 @@ public class LevelController : MonoBehaviour
 
 			//Player Speed
 			player.GetComponent<FirstPersonController>().m_WalkSpeed = 3 * modifier;
-			player.GetComponent<FirstPersonController>().m_RunSpeed = 8 * modifier;
-			player.GetComponent<FirstPersonController>().m_JumpSpeed = 7 * modifier;
+			player.GetComponent<FirstPersonController>().m_RunSpeed = 5 * modifier;
+			player.GetComponent<FirstPersonController>().m_JumpSpeed = 5.5f * modifier;
 
 		}
 

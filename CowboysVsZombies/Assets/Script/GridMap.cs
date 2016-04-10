@@ -66,9 +66,7 @@ public class GridMap : MonoBehaviour {
 			}
 		}
 
-		Debug.Log (lowest);
-
-		if ((lastSpawnX == lowestX) && (lastSpawnY == lowestY)) {
+		if (grid[lowestY,lowestX]) {
 			SpawnAtRandom ();
 			Debug.Log ("Spawned Randomly");
 		}
@@ -92,6 +90,16 @@ public class GridMap : MonoBehaviour {
 				grid [lowestY+1,lowestX] = true;
 				grid [lowestY+1,lowestX+1] = true;
 				grid [lowestY+1,lowestX-1] = true;
+
+				avg_hr_grid [lowestX,lowestY] = int.MaxValue;
+				avg_hr_grid [lowestY,lowestX-1] = int.MaxValue;
+				avg_hr_grid [lowestY,lowestX+1] = int.MaxValue;
+				avg_hr_grid [lowestY-1,lowestX] = int.MaxValue;
+				avg_hr_grid [lowestY-1,lowestX+1] = int.MaxValue;
+				avg_hr_grid [lowestY-1,lowestX-1] = int.MaxValue;
+				avg_hr_grid [lowestY+1,lowestX] = int.MaxValue;
+				avg_hr_grid [lowestY+1,lowestX+1] = int.MaxValue;
+				avg_hr_grid [lowestY+1,lowestX-1] = int.MaxValue;
 			}
 		}
 
@@ -106,8 +114,8 @@ public class GridMap : MonoBehaviour {
 			y = 39;
 		
 		avg_hr_grid_count [x, y]++;
-
-		avg_hr_grid [x, y] = ((avg_hr_grid [x, y] * (avg_hr_grid_count [x, y] - 1)) + hr) / avg_hr_grid_count [x, y];
+		if(!grid[x,y])
+			avg_hr_grid [x, y] = ((avg_hr_grid [x, y] * (avg_hr_grid_count [x, y] - 1)) + hr) / avg_hr_grid_count [x, y];
 
 	}
 

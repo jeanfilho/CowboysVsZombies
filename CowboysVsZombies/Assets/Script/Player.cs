@@ -90,8 +90,9 @@ public class Player : MonoBehaviour {
 			}
 		}
 
-		if (Input.GetKeyDown (KeyCode.C)) 
+		if (Input.GetKeyDown (KeyCode.C) && !reload && shootable) 
 		{
+			
 			if (weaponSelected.Equals ("Shotgun")) 
 			{
 				Shotgun.gameObject.SetActive (false);
@@ -162,11 +163,14 @@ public class Player : MonoBehaviour {
 
 	private void shoot()
 	{
-		Ray ray = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Screen.height - Input.mousePosition.y,0));
-		RaycastHit hit;
+		
 		
 		if (Input.GetMouseButtonDown(0)&&shootable && reload==false) 
 		{
+
+			Ray ray = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Screen.height - Input.mousePosition.y,0));
+			RaycastHit hit;
+
 			if (actualWeapon.shoot () == true) 
 			{
 				actualWeapon.GetComponent<AudioSource> ().Play ();

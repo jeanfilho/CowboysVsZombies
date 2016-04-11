@@ -201,6 +201,13 @@ public class Player : MonoBehaviour {
                         Instantiate(actionSign[actionSignID], hit.point, this.gameObject.transform.rotation);
                         Instantiate(bloodSplatter, hit.point, otherObj.gameObject.transform.rotation);
 					} 
+					if (otherObj.tag == "Head") {
+						//Instantiate(par, hit.point, Quaternion.LookRotation(hit.normal));
+						otherObj.gameObject.GetComponentInParent<Zombie> ().kill();
+
+						Instantiate(actionSign[0], hit.point, this.gameObject.transform.rotation);
+						Instantiate(bloodSplatter, hit.point, otherObj.gameObject.transform.rotation);
+					} 
 					else if (otherObj.tag == "Barrel") 
 					{
 						//Instantiate(Explosion, hit.point, Quaternion.LookRotation(hit.normal));

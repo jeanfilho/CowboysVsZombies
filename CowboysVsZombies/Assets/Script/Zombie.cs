@@ -155,4 +155,10 @@ public class Zombie : MonoBehaviour
     {
         return attackID;
     }
+
+	public void kill(){
+		this.health = -1;
+		this.gameObject.GetComponent<Animator>().SetBool("Dead",true);
+		counterActive = true;
+	}
 }

@@ -29,7 +29,7 @@ public class ZombieSpawner : MonoBehaviour {
             active = true;
         }
 
-		if (active && LevelController.isGame)
+		if (active && !LevelController.isPaused && LevelController.isGame)
         {
             spawnRateCounter = spawnRateCounter + Time.deltaTime;
 			if (spawnRateCounter >= 10.0f * spawnRate * GameData.Instance.getSpawnRateAdjustment())

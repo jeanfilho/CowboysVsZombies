@@ -123,7 +123,7 @@ public class LevelController : MonoBehaviour
 
 		//Difficulty
 		//TODO: Finetuning of difficulty formulas, fitting to actual heartrate values
-		if (isGame) {
+		if (isGame && !isPaused) {
 			float hr = heartMonitor.sampleHeartRate();
 				
 			if (hr_max == 0 && hr_min == 0) {
@@ -174,9 +174,6 @@ public class LevelController : MonoBehaviour
 
 			//Player Speed
 			player.GetComponent<FirstPersonController>().m_WalkSpeed = 3 * modifier;
-			player.GetComponent<FirstPersonController>().m_RunSpeed = 5 * modifier;
-			player.GetComponent<FirstPersonController>().m_JumpSpeed = 5.5f * modifier;
-
 		}
 
 	}

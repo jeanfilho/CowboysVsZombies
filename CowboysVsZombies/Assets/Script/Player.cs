@@ -36,6 +36,9 @@ public class Player : MonoBehaviour {
 	public GameObject muzzle_shotgun_right;
 	public GameObject muzzle_rifle;
 
+	public RawImage bloodScreen;
+	public AudioClip pain;
+
 
     // UI:
  //   public Text healthText;
@@ -64,6 +67,11 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
+
+		//Blood screen fade
+		if (bloodScreen.color.a > 0)
+			bloodScreen.color -= new Color(0,0,0, Time.deltaTime);
+
 		if (counterActive) 
 		{
 			counter += Time.deltaTime;
@@ -123,10 +131,8 @@ public class Player : MonoBehaviour {
 
 	void changeWeapon(string newWeapon)
 	{
-		if (weaponSelected.Equals (newWeapon)) {
-			;
-		} 
-		else {
+		if (!weaponSelected.Equals (newWeapon))
+		{
 			weaponSelected = newWeapon;
 			actualWeapon=getactualWeapon();
 			/*
@@ -156,7 +162,10 @@ public class Player : MonoBehaviour {
     // #################### UI ####################
     public void changePlayerHealth(int value)
     {
+		GetComponent<AudioSource> ().clip = pain;
+		GetComponent<AudioSource> ().Play ();
         GameData.Instance.changePlayerHealth(value);
+		bloodScreen.color = new Color(1,1,1,1);
    //     healthText.text = "Health: " + GameData.Instance.getPlayerHealth();
     }
 
@@ -165,7 +174,7 @@ public class Player : MonoBehaviour {
 	{
 		
 		
-		if (Input.GetMouseButtonDown(0)&&shootable && reload==false) 
+		if (Input.GetMouseButtonDown(0) && shootable && reload==false) 
 		{
 
 			Ray ray = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Screen.height - Input.mousePosition.y,0));

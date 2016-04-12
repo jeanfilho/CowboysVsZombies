@@ -20,6 +20,12 @@ public class SimpleNavMeshAgent : MonoBehaviour
     {
         agent.SetDestination(target.position);
 		checkDeath ();
+
+		if (LevelController.isPaused)
+			agent.Stop ();
+		else
+			agent.Resume ();
+			
     }
 
     public void setTarget(GameObject targetPlayer)

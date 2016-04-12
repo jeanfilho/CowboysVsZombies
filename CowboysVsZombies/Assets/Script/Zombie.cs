@@ -42,7 +42,7 @@ public class Zombie : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if (soundTimer <= 0 && LevelController.isGame) {
+		if (soundTimer <= 0 && !LevelController.isPaused) {
 			GetComponent<AudioSource> ().Play ();
 			soundTimer = Random.Range (4, 16);
 		} else
@@ -52,6 +52,9 @@ public class Zombie : MonoBehaviour
 			counter += Time.deltaTime;
 			if (this.gameObject.GetComponent<Animator> ().GetBool ("Dead") == true) 
 			{
+				gameObject.GetComponent<Animator> ().Play ("death02");
+				gameObject.GetComponent<NavMeshAgent> ().Stop ();
+				gameObject.GetComponent<Collider> ().enabled = false;
 				if (counter >= 3.0) 
 				{
 
@@ -72,6 +75,7 @@ public class Zombie : MonoBehaviour
         else if (attacking)
         {
             attackCounter += Time.deltaTime;
+			gameObject.GetComponent<NavMeshAgent> ().Stop ();
             if (attackCounter >= attackDuration)
             {
                 attackCounter = 0;
@@ -80,6 +84,7 @@ public class Zombie : MonoBehaviour
                 this.gameObject.GetComponent<Animator>().SetBool("isBiting", false);
                 attackID = -1;
                 attackingCooldown = true;
+				gameObject.GetComponent<NavMeshAgent> ().Resume ();
             }
         }        
 	}

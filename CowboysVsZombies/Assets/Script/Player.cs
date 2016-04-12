@@ -162,10 +162,12 @@ public class Player : MonoBehaviour {
     // #################### UI ####################
     public void changePlayerHealth(int value)
     {
-		GetComponent<AudioSource> ().clip = pain;
-		GetComponent<AudioSource> ().Play ();
-        GameData.Instance.changePlayerHealth(value);
-		bloodScreen.color = new Color(1,1,1,1);
+		if (value < 0) {
+			GetComponent<AudioSource> ().clip = pain;
+			GetComponent<AudioSource> ().Play ();
+			bloodScreen.color = new Color (1, 1, 1, 1);
+		}
+		GameData.Instance.changePlayerHealth(value);
    //     healthText.text = "Health: " + GameData.Instance.getPlayerHealth();
     }
 

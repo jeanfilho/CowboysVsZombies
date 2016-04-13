@@ -77,6 +77,10 @@ public class GridMap : MonoBehaviour {
 				GameObject spawnInst = (GameObject)Instantiate (spawner, new Vector3 ((lowestY-20) * 2 + 1, 0, (lowestX-20) * 2 + 1), Quaternion.AngleAxis(Random.Range(0,360),new Vector3(0,1,0)));
 				spawnInst.GetComponent<ZombieSpawner> ().initialize (player);
 
+				if (lowestX <= getPlayerPosOnGridX () + 1 && lowestX >= getPlayerPosOnGridX () - 1 && lowestY <= getPlayerPosOnGridY () + 1 && lowestY >= getPlayerPosOnGridY () - 1) {
+					player.transform.position = new Vector3 (player.transform.position.x, player.transform.position.y + 1,player.transform.position.z);
+				}
+
 				lastSpawnX = lowestX;
 				lastSpawnY = lowestY;
 				Debug.Log ("Spawned at lowest location");
@@ -117,6 +121,15 @@ public class GridMap : MonoBehaviour {
 		if(!grid[x,y])
 			avg_hr_grid [x, y] = ((avg_hr_grid [x, y] * (avg_hr_grid_count [x, y] - 1)) + hr) / avg_hr_grid_count [x, y];
 
+	}
+
+	public int getPlayerPosOnGridX(){
+		int x = Mathf.Abs (Mathf.FloorToInt ((player.transform.position.z + 40) / 2));
+		return x;
+	}
+	public int getPlayerPosOnGridY(){
+		int y = Mathf.Abs (Mathf.FloorToInt ((player.transform.position.x + 40) / 2));
+		return y;
 	}
 
 	void initializeMap(){

@@ -31,6 +31,9 @@ public class Zombie : MonoBehaviour
 
 	float soundTimer = 5;
 
+	public GameObject drop;
+	public float dropchance;
+
 
 	// Use this for initialization
 	void Start () 
@@ -55,9 +58,15 @@ public class Zombie : MonoBehaviour
 				gameObject.GetComponent<Animator> ().Play ("death02");
 				gameObject.GetComponent<NavMeshAgent> ().Stop ();
 				gameObject.GetComponent<Collider> ().enabled = false;
+
+				attacking = false;
+				attackMode = false;
+
 				if (counter >= 3.0) 
 				{
-
+					if (Random.Range (0f, 1f) <= dropchance) {
+						Instantiate (drop, this.gameObject.transform.position, Quaternion.identity);
+					}
 					GameData.Instance.setScore (GameData.Instance.getScore () + Mathf.FloorToInt(10*GameData.Instance.getZombieHPModifier()));
 					Destroy (this.gameObject);
 
@@ -163,7 +172,6 @@ public class Zombie : MonoBehaviour
 
 	public void kill(){
 		this.health = -1;
-		this.gameObject.GetComponent<Animator>().SetBool("Dead",true);
-		counterActive = true;
+		checkLifeHealth ();
 	}
 }

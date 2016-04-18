@@ -201,7 +201,7 @@ public class LevelController : MonoBehaviour
 		SceneManager.LoadScene ("Level01", LoadSceneMode.Single);
 	}
 
-	void showMenu(Canvas menu)
+	public void showMenu(Canvas menu)
 	{
 		mainMenu.enabled = false;
 		replayMenu.enabled = false;
